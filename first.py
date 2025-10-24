@@ -1,115 +1,64 @@
 import streamlit as st
+st.set_page_config(page_title='音乐播放器', page_icon='🎵')
+st.header("🎶简易音乐播放器")
+music = [
+    {
+        'url': 'https://music.163.com/song/media/outer/url?id=2078077516.mp3',
+        'parm': '坏女孩',
+        'photo':'https://p1.music.126.net/kZb9DO4vykqiYEx0HHx86w==/109951163065542645.jpg?param=230y230',
+        'author':'歌手:徐良'
+        
+    },
+    {
+          'url': 'https://music.163.com/song/media/outer/url?id=455535252.mp3',
+          'parm': '泡沫',
+          'photo':'https://p1.music.126.net/oJorrgJ3IotZUAbZkBMuFw==/109951167771736533.jpg?param=230y230',
+          'author':'歌手:邓紫棋'
+     },
+    {
+         'url': 'https://music.163.com/song/media/outer/url?id=464534706.mp3',
+         'parm': '演员',
+         'photo':'https://p1.music.126.net/jj_Ke8S0q8lpDtohy9seDw==/109951168719781607.jpg?param=230y230',
+         'author':'歌手:薛之谦'
+     }
 
-import pandas as pd
+]
 
-from datetime import datetime
 
 
 
-# 主标题
 
-st.title("🕶️ 学生 小梁 - 数字档案")
+if 'ind' not in st.session_state:
+   st.session_state['ind'] = 0
 
 
+def nextImg():
+    st.session_state['ind'] = (st.session_state['ind'] + 1) % len(music)
 
-# 基础信息章节
+def prevImg():
+    st.session_state['ind'] = (st.session_state['ind'] - 1) % len(music)
 
-st.header("🔑 基础信息")
+a1, a2 = st.columns([1, 2])
 
-st.text("学生ID: 23031310118")
+with a1:
+    st.image(music[st.session_state['ind']]['photo'])
 
-st.markdown("**注册时间**: `2025-10-20 ` | **精神状态**:  🔥暴躁")
+with a2:
+    st.title(music[st.session_state['ind']]['parm'])
+    st.text(music[st.session_state['ind']]['author'])
+    st.audio(music[st.session_state['ind']]['url'],autoplay=True)
+    
+c1,c2 = st.columns(2)
 
-st.markdown("**当前教室**: `实训楼204` | **安全等级**: `绝密`")
+    
+with c1:
+    st.button('上一首', on_click=prevImg, use_container_width=True)
 
+with c2:
+    st.button('下一首', on_click=nextImg,use_container_width=True)
 
+st.header("音乐列表")
+st.text("1.坏女孩")
+st.text("2.泡沫")
+st.text("3.演员")
 
-# 技能矩阵章节
-
-st.header("📊 技能矩阵")
-
-col1, col2, col3 = st.columns(3)
-
-col1.metric("英语", "95%", "2%") 
-
-col2.metric("数学", "87%", "-1%")
-
-col3.metric("体育", "68%", "-10%")
-
-
-
-# 进度条展示
-
-st.subheader("Streamlit课程进度")
-
-st.progress(28, text="Streamlit课程进度")
-
-
-
-# 任务日志章节
-
-st.header("📝 任务日志")
-
-mission_data = {
-
-    "日期": ["2025-10-19", "2025-10-20", "2025-10-21"],
-
-    "任务": ["学生数字档案", "课程管理系统", "数据图表展示"],
-
-    "状态": ["✅ 完成", "🕒 进行中", "❌ 未完成"],
-
-    "难度": ["★☆☆☆☆", "★★☆☆☆", "★★★☆☆"]
-
-}
-
-mission_df = pd.DataFrame(mission_data)
-
-st.table(mission_df.style.applymap(
-
-    lambda x: 'color: #0f0' if x == "✅ 完成" else 'color: #ff0')
-
-)
-
-
-
-# 代码块展示
-
-st.subheader("🔐 最新代码成果")
-
-st.code('''def matrix_breach():
-
-    while True:
-
-        if detect_vulnerability():
-
-            exploit()
-
-            return "ACCESS GRANTED"
-
-        else:
-
-            stealth_evade()''', language='python')
-
-
-
-# 动态信息流
-
-st.write("---")
-
-st.write("`>> SYSTEM MESSAGE:` 下一个任务目标已解锁...")
-
-st.write("`>> TARGET:` 课程管理系统")
-
-st.write("`>> COUNTDOWN:`", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-
-
-
-# 终端效果
-
-st.markdown("""
-
-系统状态: 在线
-
-连接状态: 已加密
-
-""")
